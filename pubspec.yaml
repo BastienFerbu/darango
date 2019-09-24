@@ -1,0 +1,13 @@
+name: darango
+version: 0.0.1
+author: "Bastien FERBU"
+homepage: 
+description: An Arango driver for dart
+
+environment:
+  sdk: ">=2.4.0 <3.0.0"
+
+dependencies:
+  http: ^0.12.0+2
+
+dev_dependencies:
