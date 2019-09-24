@@ -49,4 +49,6 @@ class Database {
   Collection collection(String name){
     return Collection(name);
   }
+
+  
 }

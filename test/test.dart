@@ -7,5 +7,4 @@ main(List<String> args) async {
   await database.connect("zaucard", "root", "24861793");
 
   await database.current();
-  database.arangoClient.close();
 }
