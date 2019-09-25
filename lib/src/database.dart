@@ -8,11 +8,11 @@ class Database {
   String id; 
   String auth;
   bool isSystem;
-  Client client = Client();
+  ArangoClient client;
 
   Database(this.url);
 
-  connect(db_name, username, password, {bool useBasic = true}) async{
+  Future<bool> connect(db_name, username, password, {bool useBasic = true}) async{
     this.db_name = db_name;
     if(useBasic)
       this.auth = 'Basic ' + base64Encode(utf8.encode('$username:$password'));
@@ -22,6 +22,7 @@ class Database {
     }
     this.uri = Uri.parse(this.url + "/_db/" + this.db_name);
     
+    this.client = ArangoClient(this.auth, this.uri);
     Map<String, dynamic> current = jsonDecode(await this.current());
     if(!current["error"]){
       this.path = current["result"]["path"];
@@ -30,25 +31,21 @@ class Database {
     }
   }
 
-  Uri concatUri(String p){
-    return Uri(scheme: uri.scheme, host: uri.host, port: uri.port, path: uri.path + p);
+  void close(){
+    client.close();
   }
 
-  Request makeRequest(Uri u, {String methode = "get"}){
-    return Request(methode, u)..headers['Authorization'] = this.auth;
-  }
 
   Future<String> current() async{
-    Uri u = concatUri("/_api/database/current");
-    Request request = makeRequest(u);
+    Request request = client.prepareRequest("/_api/database/current");
     StreamedResponse current = await client.send(request);
     String res = await current.stream.bytesToString();
     return res;
   }
 
   Collection collection(String name){
-    return Collection(name);
+    return Collection(name, this.client);
   }
 
-  
+
 }

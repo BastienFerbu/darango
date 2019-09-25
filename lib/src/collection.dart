@@ -16,6 +16,19 @@ class Collection {
   String smartJoinAttribute;
   int type;
   bool waitForSync; 
+  ArangoClient client;
 
-  Collection(this.name);
+  Collection(this.name, this.client);
+
+
+  Future<String> infos() async {
+    Request request = client.prepareRequest("/_api/collection/"+this.name);
+    StreamedResponse current = await client.send(request);
+    String res = await current.stream.bytesToString();
+    return res;
+  }
+
+  Document document(){
+    return Document(this);
+  }
 }
