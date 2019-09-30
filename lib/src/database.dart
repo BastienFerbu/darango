@@ -47,5 +47,11 @@ class Database {
     return Collection(name, this.client);
   }
 
+  Aql aql(){
+    return Aql(this.client);
+  }
 
+  Graph graph(String name){
+    return Graph(name, this.client);
+  }
 }
