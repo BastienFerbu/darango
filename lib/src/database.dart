@@ -43,15 +43,32 @@ class Database {
     return res;
   }
 
-  Collection collection(String name){
-    return Collection(name, this.client);
+  Future<Collection> collection(String name) async{
+    Request request = client.prepareRequest("/_api/collection/" + name, methode: "get");
+    Map<dynamic, dynamic> doc = await client.exec(request);
+    if(doc != null){
+      Collection collection = Collection(name, doc["id"], doc["isSystem"], doc["type"], doc["status"], doc["globallyUniqueId"], this.client);
+      return collection;
+    }
+    else{
+      return null;
+    }
   }
 
   Aql aql(){
     return Aql(this.client);
   }
 
-  Graph graph(String name){
-    return Graph(name, this.client);
+  Future<Graph> graph(String name) async{
+    Request request = client.prepareRequest("/_api/gharial/" + name, methode: "get");
+    Map<dynamic, dynamic> doc = await client.exec(request);
+    if(doc != null){
+      Graph graph = Graph(name, doc["_id"], doc["_key"], doc["_rev"],doc["replicationFactor"], doc["minReplicationFactor"], 
+        doc["numberOfShards"],  doc["isSmart"], doc["orphanCollections"], doc["edgeDefinitions"], this.client);
+      return graph;
+    }
+    else{
+      return null;
+    }
   }
 }

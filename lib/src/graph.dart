@@ -5,8 +5,17 @@ class Graph {
   String id;
   String key;
   String rev;
+  int replicationFactor;
+  int minReplicationFactor;
+  int numberOfShards;
+  bool isSmart;
+  List orphanCollections; 
+  dynamic edgeDefinitions;
+
   ArangoClient client;
-  Graph(this.name, this.client);
+
+  Graph(this.name, this.id, this.key, this.rev, this.replicationFactor, this.minReplicationFactor, 
+    this.numberOfShards, this.isSmart, this.orphanCollections, this.edgeDefinitions, this.client);
   
   Future<Graph> get(String name) async{
     Request request = client.prepareRequest("/_api/gharial/"+this.name);

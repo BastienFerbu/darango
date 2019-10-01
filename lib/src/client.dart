@@ -22,6 +22,19 @@ class ArangoClient extends BaseClient{
     return Request(methode, u)..headers['Authorization'] = this.auth..headers['Content-Type'] = content_type;
   }
 
+  Future<Map<dynamic, dynamic>> exec(Request request) async{
+    StreamedResponse response = await send(request);
+    String doc_str = await response.stream.bytesToString();
+    Map<dynamic, dynamic> doc = jsonDecode(doc_str);
+    if(doc["error"]){
+      print(doc["errorMessage"]);
+      return null;
+    }
+    else{
+      return doc;
+    }
+  }
+
   Future<StreamedResponse> send(BaseRequest request) {
     return _inner.send(request);
   }

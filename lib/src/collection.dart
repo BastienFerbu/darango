@@ -1,24 +1,15 @@
 part of darango;
 
 class Collection {
-  String distributeShardsLike;
-  bool doCompact;
-  int indexBuckets;
-  bool isSystem;
-  bool isVolatile;
-  int journalSize;
-  Map<String,dynamic> keyOptions;
-  String name;
-  int numberOfShards;
-  int replicationFactor;
-  String shardKeys;
-  String shardingStrategy;
-  String smartJoinAttribute;
-  int type;
-  bool waitForSync; 
+  final String name;
+  final String id;
+  final bool isSystem;
+  final int type;
+  final int status;
+  final String globallyUniqueId;
   ArangoClient client;
 
-  Collection(this.name, this.client);
+  Collection(this.name, this.id, this.isSystem, this.type, this.status, this.globallyUniqueId, this.client);
 
 
   Future<String> infos() async {

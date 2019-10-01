@@ -4,7 +4,7 @@ class Aql{
   ArangoClient client;
   Aql(this.client);
 
-  query(String query) async{
+  run(String query) async{
     Request request = client.prepareRequest("/_api/query");
     request.body = query;
     StreamedResponse response = await client.send(request);
