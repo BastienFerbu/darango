@@ -28,6 +28,11 @@ class Database {
       this.path = current["result"]["path"];
       this.isSystem = current["result"]["isSystem"];
       this.id = current["result"]["id"];
+      return true;
+    }
+    else{
+      print(current["errorMessage"]);
+      return false;
     }
   }
 

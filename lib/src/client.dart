@@ -28,6 +28,7 @@ class ArangoClient extends BaseClient{
     Map<dynamic, dynamic> doc = jsonDecode(doc_str);
     if(doc["error"]){
       print(doc["errorMessage"]);
+      //throw ClientException(doc["errorMessage"]);
       return null;
     }
     else{
