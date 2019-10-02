@@ -27,9 +27,10 @@ class ArangoClient extends BaseClient{
     String doc_str = await response.stream.bytesToString();
     Map<dynamic, dynamic> doc = jsonDecode(doc_str);
     if(doc["error"]){
+      print("C'est null");
       print(doc["errorMessage"]);
-      //throw ClientException(doc["errorMessage"]);
-      return null;
+      throw ClientException(doc["errorMessage"], request.url);
+      //return null;
     }
     else{
       return doc;

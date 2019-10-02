@@ -23,8 +23,8 @@ class Database {
     this.uri = Uri.parse(this.url + "/_db/" + this.db_name);
     
     this.client = ArangoClient(this.auth, this.uri);
-    Map<String, dynamic> current = jsonDecode(await this.current());
-    if(!current["error"]){
+    Map<String, dynamic> current = await this.current();
+    if(current != null && !current["error"]){
       this.path = current["result"]["path"];
       this.isSystem = current["result"]["isSystem"];
       this.id = current["result"]["id"];
@@ -41,23 +41,27 @@ class Database {
   }
 
 
-  Future<String> current() async{
-    Request request = client.prepareRequest("/_api/database/current");
-    StreamedResponse current = await client.send(request);
-    String res = await current.stream.bytesToString();
+  Future<Map<String, dynamic>> current() async{
+    Map<String, dynamic> res;
+    try {
+      Request request = client.prepareRequest("/_api/database/current");
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
     return res;
   }
 
   Future<Collection> collection(String name) async{
     Request request = client.prepareRequest("/_api/collection/" + name, methode: "get");
-    Map<dynamic, dynamic> doc = await client.exec(request);
-    if(doc != null){
-      Collection collection = Collection(name, doc["id"], doc["isSystem"], doc["type"], doc["status"], doc["globallyUniqueId"], this.client);
-      return collection;
+    Collection collection;
+    try {
+      Map<dynamic, dynamic> doc = await client.exec(request);
+      collection = Collection(name, doc["id"], doc["isSystem"], doc["type"], doc["status"], doc["globallyUniqueId"], this.client);
+    } catch (e) {
+      print(e);
     }
-    else{
-      return null;
-    }
+    return collection;
   }
 
   Aql aql(){

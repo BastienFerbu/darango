@@ -9,9 +9,11 @@ main(List<String> args) async {
   
   Collection usersCollection = await database.collection("user");
 
-  Map<String, dynamic> user = {"lastName":"Toto", "FirstName":"Titi"};
-  Document doc = await usersCollection.document().add(user);
-  print(doc.data);
+  if(usersCollection != null){
+    Map<String, dynamic> user = {"lastName":"Toto", "FirstName":"Titi"};
+    Document doc = await usersCollection.document().add(user);
+    print(doc.data);
+  }
   /* doc = await usersCollection.document().get(doc.id);
   print(doc.data);
   Map<String, dynamic> user2 = {"_key":doc.key,"_id":doc.id,"_rev":doc.rev,"lastName":"Toto","FirstName":"Titi", "email": "toto@gmail.com"};
