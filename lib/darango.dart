@@ -10,3 +10,4 @@ part 'src/client.dart';
 part 'src/document.dart';
 part 'src/aql.dart';
 part 'src/graph.dart';
+part 'src/transaction.dart';

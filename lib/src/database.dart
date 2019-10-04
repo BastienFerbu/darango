@@ -17,7 +17,7 @@ class Database {
     if(useBasic)
       this.auth = 'Basic ' + base64Encode(utf8.encode('$username:$password'));
     else{
-      Response response = await post(this.url+"/_open/auth", body: {"username":"root","password":"24861793"});
+      Response response = await post(this.url+"/_open/auth", body: {"username":"$username","password":"$password"});
       print(response.body);
     }
     this.uri = Uri.parse(this.url + "/_db/" + this.db_name);
@@ -31,8 +31,8 @@ class Database {
       return true;
     }
     else{
-      print(current["errorMessage"]);
-      return false;
+      throw ClientException(current["errorMessage"], this.uri);
+      //return false;
     }
   }
 
@@ -66,6 +66,10 @@ class Database {
 
   Aql aql(){
     return Aql(this.client);
+  }
+
+  Transaction transaction(){
+    return Transaction(this.client);
   }
 
   Future<Graph> graph(String name) async{
