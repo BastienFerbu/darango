@@ -42,6 +42,7 @@ class Database {
 
 
   Future<Map<String, dynamic>> current() async{
+    /// Retrieve de current database information
     Map<String, dynamic> res;
     try {
       Request request = client.prepareRequest("/_api/database/current");
