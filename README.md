@@ -36,7 +36,8 @@ if(usersCollection != null){
     // Read
     doc = await usersCollection.document().get(doc.id);
     // Update
-    Map<String, dynamic> user2 = {"_key":doc.key,"_id":doc.id,"_rev":doc.rev,"lastName":"Toto","FirstName":"Titi", "email": "toto@gmail.com"};
+    Map<String, dynamic> user2 = {"_key":doc.key,"_id":doc.id,"_rev":doc.rev,
+        "lastName":"Toto","FirstName":"Titi", "email": "toto@gmail.com"};
     doc = await usersCollection.document().update(user2);
     // Delete
     await usersCollection.document().delete(doc.id);
