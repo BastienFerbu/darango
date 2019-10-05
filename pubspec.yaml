@@ -1,8 +1,8 @@
 name: darango
 version: 0.0.1
-author: "Bastien FERBU"
-homepage: 
-description: An Arango driver for dart
+author: "Bastien FERBU <bastien.ferbu@gmail.com>"
+homepage: https://github.com/BastienFerbu/darango
+description: An ArangoDB API for dart
 
 environment:
   sdk: ">=2.4.0 <3.0.0"
