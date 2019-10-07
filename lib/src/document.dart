@@ -9,6 +9,22 @@ class Document {
 
   Document(this.collection, {this.id});
 
+  Map<String, dynamic> toMap({var separated = false}) {
+    Map<String, dynamic> doc;
+    if(!separated){
+      doc = this.data;
+      doc['id'] = this.id;
+      doc['key'] = this.key;
+      doc['rev'] = this.rev;
+    }
+    else{
+      doc = {"id" : this.id, "key": this.key, "rev":this.rev, "data":this.data};
+    }
+    return doc;
+  }
+
+  String toString({var separated = false}) => this.toMap(separated: separated).toString();
+
   Future<Document> add(Map<String, dynamic> data)async {
     String d = jsonEncode(data);
     Request request = collection.client.prepareRequest("/_api/document/" + collection.name, methode: "post");

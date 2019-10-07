@@ -11,7 +11,7 @@ main(List<String> args) async {
 
   Document doc = await usersCollection.document().get(id);
   print(doc.data);
-  Map<String, dynamic> user2 = {"_key":doc.key,"_id":doc.id,"_rev":doc.rev,"lastName":"Toto","FirstName":"Titi", "email": "toto@gmail.com"};
+  Map<String, dynamic> user2 = {"_key":doc.key,"_id":doc.id,"_rev":doc.rev,"lastName":"Toto","FirstName":"Titi", "email": "toto@titi.com"};
   doc = await usersCollection.document().update(user2);
   print(doc.data);
 
