@@ -13,12 +13,12 @@ class Document {
     Map<String, dynamic> doc;
     if(!separated){
       doc = this.data;
-      doc['id'] = this.id;
-      doc['key'] = this.key;
-      doc['rev'] = this.rev;
+      doc['_id'] = this.id;
+      doc['_key'] = this.key;
+      doc['_rev'] = this.rev;
     }
     else{
-      doc = {"id" : this.id, "key": this.key, "rev":this.rev, "data":this.data};
+      doc = {"_id" : this.id, "_key": this.key, "_rev":this.rev, "data":this.data};
     }
     return doc;
   }

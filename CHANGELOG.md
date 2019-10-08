@@ -1,3 +1,7 @@
+## [0.0.5] - 08/08/2019.
+
+* Same format from arango for _id, _rev, _key
+
 ## [0.0.4] - 08/08/2019.
 
 * Document get on key or on id
