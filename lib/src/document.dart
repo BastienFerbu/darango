@@ -39,8 +39,9 @@ class Document {
     return this;
   }
 
-  Future<Document> get(String id) async{
-    Request request = collection.client.prepareRequest("/_api/document/" + id);
+  Future<Document> get({String id, String key}) async{
+    String url = id == null ? "/_api/document/${collection.name}/$key" : "/_api/document/$id";
+    Request request = collection.client.prepareRequest(url);
     StreamedResponse response = await collection.client.send(request);
     String doc_str = await response.stream.bytesToString();
     Map<dynamic, dynamic> doc = jsonDecode(doc_str);
