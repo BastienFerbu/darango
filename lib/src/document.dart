@@ -39,8 +39,12 @@ class Document {
     return this;
   }
 
-  Future<Document> get({String id, String key}) async{
-    String url = id == null ? "/_api/document/${collection.name}/$key" : "/_api/document/$id";
+  bool isId(String s){
+    return s.contains('/');
+  }
+
+  Future<Document> get(String s) async{
+    String url = isId(s) ? "/_api/document/$id" : "/_api/document/${collection.name}/$key";
     Request request = collection.client.prepareRequest(url);
     StreamedResponse response = await collection.client.send(request);
     String doc_str = await response.stream.bytesToString();
@@ -67,8 +71,9 @@ class Document {
     return this;
   }
 
-  void delete(String id) async {
-    Request request = collection.client.prepareRequest("/_api/document/" + id, methode: "delete");
+  void delete(String s) async {
+    String url = isId(s) ? "/_api/document/$id" : "/_api/document/${collection.name}/$key";
+    Request request = collection.client.prepareRequest(url, methode: "delete");
     await collection.client.send(request);
   }
 }
