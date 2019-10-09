@@ -1,3 +1,7 @@
+## [0.0.7] - 08/08/2019.
+
+* Typo correcting
+
 ## [0.0.6] - 08/08/2019.
 
 * Document get/delete on key or id
