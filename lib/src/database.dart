@@ -42,10 +42,77 @@ class Database {
 
 
   Future<Map<String, dynamic>> current() async{
-    /// Retrieve de current database information
+    /// Retrieve the current database information
     Map<String, dynamic> res;
     try {
       Request request = client.prepareRequest("/_api/database/current");
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
+
+  Future<Map<String, dynamic>> users() async{
+    /// Retrieves a list of all databases the current user can access
+    Map<String, dynamic> res;
+    try {
+      Request request = client.prepareRequest("/_api/database/user");
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
+
+  Future<Map<String, dynamic>> databases() async{
+    /// Retrieves a list of all existing databases
+    Map<String, dynamic> res;
+    try {
+      Request request = client.prepareRequest("/_api/database");
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
+
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data) async{
+    /// Create a database
+    Map<String, dynamic> res;
+    String d = jsonEncode(data);
+    try {
+      Request request = client.prepareRequest("/_api/database", methode: "post");
+      request.body = d;
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
+
+  Future<Collection> createCollection(Map<String, dynamic> data) async{
+    /// Create collection
+    Map<String, dynamic> res;
+    Collection collection;
+    String d = jsonEncode(data);
+    try {
+      Request request = client.prepareRequest("/_api/collection", methode: "post");
+      request.body = d;
+      res = await client.exec(request);
+      collection = Collection(name: res["name"], id: res["id"], isSystem: res["isSystem"], type: res["type"], status: res["status"], globallyUniqueId: res["globallyUniqueId"], client: this.client);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    return collection;
+  }
+
+  Future<Map<String, dynamic>> drop(String database_name) async{
+    /// Drop a database
+    Map<String, dynamic> res;
+    try {
+      Request request = client.prepareRequest("/_api/database/$database_name", methode: "delete");
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -58,7 +125,7 @@ class Database {
     Collection collection;
     try {
       Map<dynamic, dynamic> doc = await client.exec(request);
-      collection = Collection(name, doc["id"], doc["isSystem"], doc["type"], doc["status"], doc["globallyUniqueId"], this.client);
+      collection = Collection(name: name, id: doc["id"], isSystem: doc["isSystem"], type: doc["type"], status: doc["status"], globallyUniqueId: doc["globallyUniqueId"], client: this.client);
     } catch (e) {
       print(e);
     }

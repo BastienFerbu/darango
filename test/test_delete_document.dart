@@ -9,9 +9,9 @@ main(List<String> args) async {
   
   Collection usersCollection = await database.collection("users");
 
-  Document doc = await usersCollection.document().get(id);
+  Document doc = await usersCollection.document(document_handle: id).get();
   print(doc.data);
-  await usersCollection.document().delete(doc.id); 
+  await usersCollection.document(document_handle: doc.id).delete(); 
 
   database.close();
 }

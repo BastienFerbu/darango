@@ -9,7 +9,7 @@ main(List<String> args) async {
   
   Collection usersCollection = await database.collection("users");
 
-  Document doc = await usersCollection.document().get(id);
+  Document doc = await usersCollection.document(document_handle: id).get();
   print(doc.data);
   Map<String, dynamic> user2 = {"_key":doc.key,"_id":doc.id,"_rev":doc.rev,"lastName":"Toto","FirstName":"Titi", "email": "toto@titi.com"};
   doc = await usersCollection.document().update(user2);
