@@ -134,18 +134,6 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> all_collections() async{
-    /// Returns all collections
-    Map<String, dynamic> res;
-    try {
-      Request request = client.prepareRequest("/_api/collection", methode: "get");
-      res = await client.exec(request);
-    } catch (e) {
-      print(e);
-    }
-    return res;
-  }
-
   Future<Map<String, dynamic>> load() async{
     /// Loads a collection
     Map<String, dynamic> res;

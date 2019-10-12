@@ -91,23 +91,6 @@ class Database {
     return res;
   }
 
-  Future<Collection> createCollection(Map<String, dynamic> data) async{
-    /// Create collection
-    Map<String, dynamic> res;
-    Collection collection;
-    String d = jsonEncode(data);
-    try {
-      Request request = client.prepareRequest("/_api/collection", methode: "post");
-      request.body = d;
-      res = await client.exec(request);
-      collection = Collection(name: res["name"], id: res["id"], isSystem: res["isSystem"], type: res["type"], status: res["status"], globallyUniqueId: res["globallyUniqueId"], client: this.client);
-    } catch (e) {
-      print(e);
-      return null;
-    }
-    return collection;
-  }
-
   Future<Map<String, dynamic>> drop(String database_name) async{
     /// Drop a database
     Map<String, dynamic> res;
@@ -125,7 +108,8 @@ class Database {
     Collection collection;
     try {
       Map<dynamic, dynamic> doc = await client.exec(request);
-      collection = Collection(name: name, id: doc["id"], isSystem: doc["isSystem"], type: doc["type"], status: doc["status"], globallyUniqueId: doc["globallyUniqueId"], client: this.client);
+      collection = Collection(name: name, id: doc["id"], isSystem: doc["isSystem"], type: doc["type"], status: doc["status"], 
+        globallyUniqueId: doc["globallyUniqueId"], client: this.client);
     } catch (e) {
       print(e);
     }
@@ -144,12 +128,74 @@ class Database {
     Request request = client.prepareRequest("/_api/gharial/" + name, methode: "get");
     Map<dynamic, dynamic> doc = await client.exec(request);
     if(doc != null){
-      Graph graph = Graph(name, doc["_id"], doc["_key"], doc["_rev"],doc["replicationFactor"], doc["minReplicationFactor"], 
-        doc["numberOfShards"],  doc["isSmart"], doc["orphanCollections"], doc["edgeDefinitions"], this.client);
+      Graph graph = Graph(name: name, id: doc["_id"], key: doc["_key"], rev: doc["_rev"], replicationFactor: doc["replicationFactor"], 
+        minReplicationFactor: doc["minReplicationFactor"], numberOfShards: doc["numberOfShards"],  isSmart: doc["isSmart"], 
+        orphanCollections: doc["orphanCollections"], edgeDefinitions: doc["edgeDefinitions"], client: this.client);
       return graph;
     }
     else{
       return null;
     }
+  }
+
+  Future<Collection> createCollection(Map<String, dynamic> data) async{
+    /// Create collection
+    Map<String, dynamic> res;
+    Collection collection;
+    String d = jsonEncode(data);
+    try {
+      Request request = client.prepareRequest("/_api/collection", methode: "post");
+      request.body = d;
+      res = await client.exec(request);
+      collection = Collection(name: res["name"], id: res["id"], isSystem: res["isSystem"], type: res["type"], status: res["status"],
+        globallyUniqueId: res["globallyUniqueId"], client: this.client);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    return collection;
+  }
+
+  Future<Graph> createGraph(Map<String, dynamic> data) async{
+    /// Create collection
+    Map<String, dynamic> doc;
+    Graph graph;
+    String d = jsonEncode(data);
+    try {
+      Request request = client.prepareRequest("/_api/gharial", methode: "post");
+      request.body = d;
+      doc = await client.exec(request);
+      graph = Graph(name: doc["name"], id: doc["_id"], key: doc["_key"], rev: doc["_rev"], replicationFactor: doc["replicationFactor"], 
+        minReplicationFactor: doc["minReplicationFactor"], numberOfShards: doc["numberOfShards"],  isSmart: doc["isSmart"], 
+        orphanCollections: doc["orphanCollections"], edgeDefinitions: doc["edgeDefinitions"], client: this.client);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    return graph;
+  }
+
+  Future<Map<String, dynamic>> collections() async{
+    /// Returns all collections
+    Map<String, dynamic> res;
+    try {
+      Request request = client.prepareRequest("/_api/collection", methode: "get");
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
+
+  Future<Map<String, dynamic>> graphs() async{
+    /// Returns all collections
+    Map<String, dynamic> res;
+    try {
+      Request request = client.prepareRequest("/_api/gharial", methode: "get");
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
+    return res;
   }
 }
