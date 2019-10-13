@@ -193,17 +193,6 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> edges() async{
-    Map<String, dynamic> res;
-    try {
-      Request request = client.prepareRequest("/_api/edges/${this.id}", methode: "get");
-      res = await client.exec(request);
-    } catch (e) {
-      print(e);
-    }
-    return res;
-  }
-
   Document document({String document_handle = null}) {
     String key, id;
     if(document_handle == null)

@@ -198,4 +198,19 @@ class Database {
     }
     return res;
   }
+
+  Future<Map<String, dynamic>> edges(String collection, String vertex, {String direction}) async{
+    Map<String, dynamic> res;
+    try {
+      Request request;
+      if(direction != null) 
+        request = client.prepareRequest("/_api/edges/${this.id}?vertex=$vertex", methode: "get");
+      else 
+        request = client.prepareRequest("/_api/edges/${this.id}?vertex=$vertex&direction=$direction", methode: "get");
+      res = await client.exec(request);
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
 }

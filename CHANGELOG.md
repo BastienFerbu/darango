@@ -1,3 +1,8 @@
+## [0.0.8] - 08/08/2019.
+
+* Add function from HTTP API
+
+
 ## [0.0.7] - 08/08/2019.
 
 * Typo correcting
