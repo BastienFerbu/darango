@@ -25,9 +25,12 @@ class Document {
 
   String toString({var separated = false}) => this.toMap(separated: separated).toString();
 
-  Future<Document> add(Map<String, dynamic> data)async {
+  Future<Document> add(Map<String, dynamic> data,
+    {bool waitForSync, bool returnNew, bool returnOld, bool silent, bool overwrite})async {
     String d = jsonEncode(data);
-    Request request = collection.client.prepareRequest("/_api/document/" + collection.name, methode: "post");
+    String url = formatUrl("/_api/document/${collection.name}", waitForSync: waitForSync, 
+      returnNew: returnNew, returnOld: returnOld, silent: silent, overwrite: overwrite);
+    Request request = collection.client.prepareRequest(url, methode: "post");
     request.body = d;
     Map<dynamic, dynamic> doc = await collection.client.exec(request);
     this.id = doc.remove('_id');
@@ -37,12 +40,7 @@ class Document {
     return this;
   }
 
-  bool isId(String s){
-    return s.contains('/');
-  }
-
   Future<Document> get() async{
-    //String url = isId(s) ? "/_api/document/$s" : "/_api/document/${collection.name}/$s";
     Request request = collection.client.prepareRequest("/_api/document/${this.id}");
     StreamedResponse response = await collection.client.send(request);
     String doc_str = await response.stream.bytesToString();
@@ -54,21 +52,36 @@ class Document {
     return this;
   }
 
-  Future<Document> update(Map<String, dynamic> data, {String col}) async{
+  Future<Document> update(Map<String, dynamic> data, 
+    {bool waitForSync, bool returnNew, bool returnOld, bool silent, bool overwrite, bool keepNull}) async{
     data.remove('_id');
     data.remove('_key');
     data.remove('_rev');
     String d = jsonEncode(data);
     Request request;
-    if(col == null)
-      request = collection.client.prepareRequest("/_api/document/" + this.id, methode: "patch");
-    else
-      request = collection.client.prepareRequest("/_api/document/" + col, methode: "patch");
+    String url = formatUrl("/_api/document/${this.id}", waitForSync: waitForSync, 
+      returnNew: returnNew, returnOld: returnOld, silent: silent, overwrite: overwrite, keepNull: keepNull);
+    request = collection.client.prepareRequest(url, methode: "patch");
     request.body = d;
     Map<dynamic, dynamic> doc = await collection.client.exec(request);
     this.data = data;
     //this.rev = doc.remove('_rev');
     return this;
+  }
+
+  String formatUrl(String url, {bool waitForSync, bool returnNew, 
+    bool returnOld, bool silent, bool overwrite, bool ignoreRevs, bool mergeObjects, bool keepNull}){
+    String formatedUrl = "$url?";
+    if(waitForSync != null && waitForSync){formatedUrl += "waitForSync=true&";}
+    if(returnNew != null && returnNew){formatedUrl += "returnNew=true&";}
+    if(returnOld != null && returnOld){formatedUrl += "returnOld=true&";}
+    if(silent != null && silent){formatedUrl += "silent=true&";}
+    if(overwrite != null && overwrite){formatedUrl += "overwrite=true&";}
+    if(ignoreRevs != null && ignoreRevs){formatedUrl += "ignoreRevs=true&";}
+    if(mergeObjects != null && mergeObjects){formatedUrl += "mergeObjects=true&";}
+    if(keepNull != null && keepNull){formatedUrl += "keepNull=true&";}
+    formatedUrl = formatedUrl.substring(0, formatedUrl.length - 1);
+    return formatedUrl;
   }
 
   void delete() async {
@@ -99,16 +112,50 @@ class Document {
     return res;
   }
 
-  Future<Document> replace(Map<String, dynamic> data,{String col}) async{
+  Future<Document> replace(Map<String, dynamic> data,
+    {bool waitForSync, bool returnNew, bool returnOld, bool silent, bool overwrite}) async{
     data.remove('_id');
     data.remove('_key');
     data.remove('_rev');
     String d = jsonEncode(data);
     Request request;
-    if(col == null)
-      request = collection.client.prepareRequest("/_api/document/" + this.id, methode: "put");
-    else
-      request = collection.client.prepareRequest("/_api/document/" + col, methode: "put");
+    String url = formatUrl("/_api/document/${this.id}", waitForSync: waitForSync, 
+      returnNew: returnNew, returnOld: returnOld, silent: silent, overwrite: overwrite);
+    request = collection.client.prepareRequest("/_api/document/" + this.id, methode: "put");
+    request.body = d;
+    Map<dynamic, dynamic> doc = await collection.client.exec(request);
+    this.data = data;
+    //this.rev = doc.remove('_rev');
+    return this;
+  }
+
+  Future<Document> replaceAllDocuments(Map<String, dynamic> data, String col,
+    {bool waitForSync, bool returnNew, bool returnOld, bool ignoreRevs}) async{
+    data.remove('_id');
+    data.remove('_key');
+    data.remove('_rev');
+    String d = jsonEncode(data);
+    Request request;
+    String url = formatUrl("/_api/document/${col}", waitForSync: waitForSync, 
+      returnNew: returnNew, returnOld: returnOld, ignoreRevs: ignoreRevs);
+    request = collection.client.prepareRequest("/_api/document/" + this.id, methode: "put");
+    request.body = d;
+    Map<dynamic, dynamic> doc = await collection.client.exec(request);
+    this.data = data;
+    //this.rev = doc.remove('_rev');
+    return this;
+  }
+
+  Future<Document> updateAllDocuments(Map<String, dynamic> data, String col, 
+    {bool waitForSync, bool returnNew, bool returnOld, bool ignoreRevs, bool mergeObjects, bool keepNull}) async{
+    data.remove('_id');
+    data.remove('_key');
+    data.remove('_rev');
+    String d = jsonEncode(data);
+    Request request;
+    String url = formatUrl("/_api/document/${col}", waitForSync: waitForSync, 
+      returnNew: returnNew, returnOld: returnOld, ignoreRevs: ignoreRevs, mergeObjects: mergeObjects, keepNull: keepNull);
+    request = collection.client.prepareRequest(url, methode: "patch");
     request.body = d;
     Map<dynamic, dynamic> doc = await collection.client.exec(request);
     this.data = data;

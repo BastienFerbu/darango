@@ -26,7 +26,7 @@ class ArangoClient extends BaseClient{
     StreamedResponse response = await send(request);
     String doc_str = await response.stream.bytesToString();
     Map<dynamic, dynamic> doc = jsonDecode(doc_str);
-    if(doc["error"]){
+    if(doc["error"] != null && doc["error"]){
       String message = "ClientException : ${doc['errorMessage']} [${doc['code']}]";
       throw ClientException(message, request.url);
       //return null;
