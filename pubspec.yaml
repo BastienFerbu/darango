@@ -1,5 +1,5 @@
 name: darango
-version: 0.0.8
+version: 0.0.9
 author: "Bastien FERBU <bastien.ferbu@gmail.com>"
 homepage: https://github.com/BastienFerbu/darango
 description: An ArangoDB API for dart

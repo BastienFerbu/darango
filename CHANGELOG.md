@@ -1,7 +1,10 @@
+## [0.0.9] - 08/08/2019.
+
+* Correction on update + replace document 
+
 ## [0.0.8] - 08/08/2019.
 
 * Add function from HTTP API
-
 
 ## [0.0.7] - 08/08/2019.
 
