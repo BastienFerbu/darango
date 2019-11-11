@@ -34,13 +34,13 @@ if(usersCollection != null){
     Map<String, dynamic> user = {"lastName":"Toto", "FirstName":"Titi"};
     Document doc = await usersCollection.document().add(user);
     // Read
-    doc = await usersCollection.document().get(doc.id);
+    doc = await usersCollection.document(document_handle: doc.id).get(); // document_handle => _id or _key
     // Update
     Map<String, dynamic> user2 = {"_key":doc.key,"_id":doc.id,"_rev":doc.rev,
         "lastName":"Toto","FirstName":"Titi", "email": "toto@gmail.com"};
-    doc = await usersCollection.document().update(user2);
+    doc = await usersCollection.document(document_handle: doc.id).update(user2);
     // Delete
-    await usersCollection.document().delete(doc.id);
+    await usersCollection.document(document_handle: doc.id).delete(); 
 }
 ```
 
@@ -61,5 +61,5 @@ print(result["result"]);
 ## TODO
 * Transactions
 * Graph
-* CRUD on collections
+* JWT auth
 * ...
