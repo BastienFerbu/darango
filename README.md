@@ -1,5 +1,5 @@
 # Darango
-A dart API for ArangoDB
+A Dart driver for ArangoDB
 
 This package based on [http][] and [ArangoDB API][] allows to communicate with your 
 ArangoDB database using Dart. I still work on it on my free time but feel free to 
