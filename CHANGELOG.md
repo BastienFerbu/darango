@@ -1,3 +1,7 @@
+## [0.0.10] - 31/08/2020.
+
+* Add a state for connection
+
 ## [0.0.9] - 08/08/2019.
 
 * Correction on update + replace document 

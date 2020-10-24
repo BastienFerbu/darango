@@ -12,7 +12,7 @@ initArangoDB() async {
 }
 
 Future<dynamic> getUser(String id) async {
-  Document doc = await usersCollection.document(id).get();
+  Document doc = await usersCollection.document(document_handle: id).get();
   print(doc.data);
   return doc.data;
 }

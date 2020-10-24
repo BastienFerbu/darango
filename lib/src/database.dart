@@ -1,5 +1,10 @@
 part of darango;
 
+enum State {
+  connected,
+  not_connected
+}
+
 class Database {
   String url;
   String db_name;
@@ -7,6 +12,7 @@ class Database {
   String path;
   String id; 
   String auth;
+  State state = State.not_connected;
   bool isSystem;
   ArangoClient client;
 
@@ -25,6 +31,7 @@ class Database {
     this.client = ArangoClient(this.auth, this.uri);
     Map<String, dynamic> current = await this.current();
     if(current != null && !current["error"]){
+      this.state = State.connected;
       this.path = current["result"]["path"];
       this.isSystem = current["result"]["isSystem"];
       this.id = current["result"]["id"];
