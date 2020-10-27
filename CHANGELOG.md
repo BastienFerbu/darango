@@ -1,3 +1,7 @@
+## [0.0.11] - 27/10/2020.
+
+* Add transaction execute
+
 ## [0.0.10] - 31/08/2020.
 
 * Add a state for connection
