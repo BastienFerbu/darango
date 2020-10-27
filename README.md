@@ -59,7 +59,6 @@ print(result["result"]);
 
 ***
 ## TODO
-* Transactions
 * Graph
 * JWT auth
 * ...
