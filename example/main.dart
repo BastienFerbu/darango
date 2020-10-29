@@ -5,19 +5,20 @@ Database database;
 
 Collection usersCollection;
 
-initArangoDB() async {
-  database = Database("http://10.0.2.2:8529");
-  database.connect("", "", "");
+void initArangoDB() async {
+  database = Database('http://10.0.2.2:8529');
+  await database.connect('', '', '');
   usersCollection = await database.collection('users');
 }
 
 Future<dynamic> getUser(String id) async {
-  Document doc = await usersCollection.document(document_handle: id).get();
+  Document doc;
+  doc = await usersCollection.document(document_handle: id).get();
   print(doc.data);
   return doc.data;
 }
 
-void main() async{
+void main() async {
   await initArangoDB();
   runApp(MyApp());
 }
@@ -25,7 +26,7 @@ void main() async{
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    getUser("");
+    getUser('');
 
     return MaterialApp(
       title: 'Welcome to Flutter',

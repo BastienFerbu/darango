@@ -9,21 +9,29 @@ class Collection {
   final String globallyUniqueId;
   ArangoClient client;
 
-  Collection({this.name, this.id, this.isSystem, this.type, this.status, this.globallyUniqueId, this.client});
+  Collection(
+      {this.name,
+      this.id,
+      this.isSystem,
+      this.type,
+      this.status,
+      this.globallyUniqueId,
+      this.client});
 
-
-  Future<String> infos() async {
-    Request request = client.prepareRequest("/_api/collection/"+this.name);
-    StreamedResponse current = await client.send(request);
-    String res = await current.stream.bytesToString();
+  /// Returns info of the collection
+  Future<String> info() async {
+    var request = client.prepareRequest('/_api/collection/' + name);
+    var streamedResponse = await client.send(request);
+    var res = await streamedResponse.stream.bytesToString();
     return res;
   }
 
-  Future<Map<String, dynamic>> drop() async{
-    /// Drop a collection
+  /// Drop a collection
+  Future<Map<String, dynamic>> drop() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}", methode: "delete");
+      var request =
+          client.prepareRequest('/_api/collection/${name}', methode: 'delete');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -31,11 +39,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> truncate() async{
-    /// Truncate a collection
+  /// Truncate a collection
+  Future<Map<String, dynamic>> truncate() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/truncate", methode: "put");
+      var request = client.prepareRequest('/_api/collection/${name}/truncate',
+          methode: 'put');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -43,18 +52,19 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> properties({Map<String, dynamic> prop}) async{
-    /// Properties of a collection
+  /// Returns properties of a collection
+  Future<Map<String, dynamic>> properties({Map<String, dynamic> prop}) async {
     Map<String, dynamic> res;
     try {
       Request request;
-      if(prop != null){
-        request = client.prepareRequest("/_api/collection/${this.name}/properties", methode: "put");
+      if (prop != null) {
+        request = client.prepareRequest('/_api/collection/${name}/properties',
+            methode: 'put');
         request.body = jsonEncode(prop);
+      } else {
+        request = client.prepareRequest('/_api/collection/${name}/properties',
+            methode: 'get');
       }
-      else{
-        request = client.prepareRequest("/_api/collection/${this.name}/properties", methode: "get");
-      }
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -62,11 +72,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> count() async{
-    /// Count document of the collection
+  /// Count document of the collection
+  Future<Map<String, dynamic>> count() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/properties", methode: "get");
+      var request = client.prepareRequest('/_api/collection/${name}/properties',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -74,11 +85,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> figures() async{
-    /// Fetch the statistics of a collection
+  /// Fetch the statistics of a collection
+  Future<Map<String, dynamic>> figures() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/figures", methode: "get");
+      var request = client.prepareRequest('/_api/collection/${name}/figures',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -86,11 +98,13 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> responsibleShard() async{
-    /// Return the responsible shard for a document
+  /// Return the responsible shard for a document
+  Future<Map<String, dynamic>> responsibleShard() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/responsibleShard", methode: "put");
+      var request = client.prepareRequest(
+          '/_api/collection/${name}/responsibleShard',
+          methode: 'put');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -98,11 +112,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> shards() async{
-    /// Return the shard ids of a collection
+  /// Return the shard ids of a collection
+  Future<Map<String, dynamic>> shards() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/shards", methode: "get");
+      var request = client.prepareRequest('/_api/collection/${name}/shards',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -110,11 +125,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> revision() async{
-    /// Retrieve the collections revision id
+  /// Retrieve the collections revision id
+  Future<Map<String, dynamic>> revision() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/revision", methode: "get");
+      var request = client.prepareRequest('/_api/collection/${name}/revision',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -122,11 +138,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> checksum() async{
-    /// Returns a checksum for the specified collection
+  /// Returns a checksum for the specified collection
+  Future<Map<String, dynamic>> checksum() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/checksum", methode: "get");
+      var request = client.prepareRequest('/_api/collection/${name}/checksum',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -134,11 +151,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> load() async{
-    /// Loads a collection
+  /// Loads a collection
+  Future<Map<String, dynamic>> load() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/load", methode: "put");
+      var request = client.prepareRequest('/_api/collection/${name}/load',
+          methode: 'put');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -146,11 +164,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> unload() async{
-    /// Unloads a collection
+  /// Unloads a collection
+  Future<Map<String, dynamic>> unload() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/unload", methode: "put");
+      var request = client.prepareRequest('/_api/collection/${name}/unload',
+          methode: 'put');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -158,11 +177,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> rename(String new_name) async{
-    /// Rename a collection
+  /// Rename a collection
+  Future<Map<String, dynamic>> rename(String new_name) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/rename", methode: "put");
+      var request = client.prepareRequest('/_api/collection/${name}/rename',
+          methode: 'put');
       request.body = '{"name": $new_name}';
       res = await client.exec(request);
     } catch (e) {
@@ -171,10 +191,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> rotate() async{
+  /// Rotate a collection
+  Future<Map<String, dynamic>> rotate() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/rotate", methode: "put");
+      var request = client.prepareRequest('/_api/collection/${name}/rotate',
+          methode: 'put');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -182,10 +204,12 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> recalculateCount() async{
+  Future<Map<String, dynamic>> recalculateCount() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection/${this.name}/recalculateCount", methode: "put");
+      var request = client.prepareRequest(
+          '/_api/collection/${name}/recalculateCount',
+          methode: 'put');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -193,17 +217,21 @@ class Collection {
     return res;
   }
 
-  Document document({String document_handle = null}) {
+  /// Return a document of the colleciton
+  ///
+  /// document_handle can be either _id or _key
+  Document document({String document_handle}) {
     String key, id;
-    if(document_handle == null)
+    if (document_handle == null) {
       return Document(collection: this);
-    if(document_handle.contains('/')){
+    }
+    if (document_handle.contains('/')) {
       id = document_handle;
-      List<String> list = document_handle.split("/");
+      var list = document_handle.split('/');
       key = list[1];
-    }else{
+    } else {
       key = document_handle;
-      id = "${this.name}/${key}";
+      id = '${name}/${key}';
     }
     return Document(collection: this, key: key, id: id);
   }

@@ -2,8 +2,8 @@
 A Dart driver for ArangoDB
 
 This package based on [http][] and [ArangoDB API][] allows to communicate with your 
-ArangoDB database using Dart. I still work on it on my free time but feel free to 
-help (especially on the proper way of coding).
+ArangoDB database using Dart. I work on it on my free time but feel free to 
+help.
 
 [http]: https://github.com/dart-lang/http
 [ArangoDB API]: https://www.arangodb.com/docs/stable/http/
@@ -59,6 +59,5 @@ print(result["result"]);
 
 ***
 ## TODO
-* Graph
 * JWT auth
 * ...

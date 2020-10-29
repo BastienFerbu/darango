@@ -9,31 +9,42 @@ class Graph {
   int minReplicationFactor;
   int numberOfShards;
   bool isSmart;
-  List orphanCollections; 
+  List orphanCollections;
   dynamic edgeDefinitions;
 
   ArangoClient client;
 
-  Graph({this.name, this.id, this.key, this.rev, this.replicationFactor, this.minReplicationFactor, 
-    this.numberOfShards, this.isSmart, this.orphanCollections, this.edgeDefinitions, this.client});
-  
-  Future<Graph> get() async{
-    Request request = client.prepareRequest("/_api/gharial/"+this.name);
-    StreamedResponse response = await client.send(request);
-    String doc_str = await response.stream.bytesToString();
+  Graph(
+      {this.name,
+      this.id,
+      this.key,
+      this.rev,
+      this.replicationFactor,
+      this.minReplicationFactor,
+      this.numberOfShards,
+      this.isSmart,
+      this.orphanCollections,
+      this.edgeDefinitions,
+      this.client});
+
+  Future<Graph> get() async {
+    var request = client.prepareRequest('/_api/gharial/' + name);
+    var streamedResponse = await client.send(request);
+    var doc_str = await streamedResponse.stream.bytesToString();
     Map<dynamic, dynamic> doc = jsonDecode(doc_str);
-    this.id = doc.remove('_id');
-    this.key = doc.remove('_key');
-    this.rev = doc.remove('_rev');
-    this.name = doc.remove('name');
+    id = doc.remove('_id');
+    key = doc.remove('_key');
+    rev = doc.remove('_rev');
+    name = doc.remove('name');
     return this;
   }
 
-  Future<Map<String, dynamic>> drop() async{
-    /// Drop a collection
+  /// Drop a graph
+  Future<Map<String, dynamic>> drop() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}", methode: "delete");
+      var request =
+          client.prepareRequest('/_api/gharial/${name}', methode: 'delete');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -41,17 +52,19 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> vertexCollection({Map<String, dynamic> prop}) async{
-    /// Properties of a collection
+  /// Returns the vertex collection
+  Future<Map<String, dynamic>> vertexCollection(
+      {Map<String, dynamic> prop}) async {
     Map<String, dynamic> res;
     try {
       Request request;
-      if(prop != null){
-        request = client.prepareRequest("/_api/gharial/${this.name}/vertex", methode: "post");
+      if (prop != null) {
+        request = client.prepareRequest('/_api/gharial/${name}/vertex',
+            methode: 'post');
         request.body = jsonEncode(prop);
-      }
-      else{
-        request = client.prepareRequest("/_api/gharial/${this.name}/vertex", methode: "get");
+      } else {
+        request = client.prepareRequest('/_api/gharial/${name}/vertex',
+            methode: 'get');
       }
       res = await client.exec(request);
     } catch (e) {
@@ -60,11 +73,13 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> dropVertexCollection(String collection) async{
-    /// Drop a collection
+  /// Drop vertex of a colleciton
+  Future<Map<String, dynamic>> dropVertexCollection(String collection) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/vertex/$collection", methode: "delete");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/vertex/$collection',
+          methode: 'delete');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -72,17 +87,19 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> edgeDefinition({Map<String, dynamic> prop}) async{
-    /// Properties of a collection
+  /// Returns edge definition
+  Future<Map<String, dynamic>> edgeDefinition(
+      {Map<String, dynamic> prop}) async {
     Map<String, dynamic> res;
     try {
       Request request;
-      if(prop != null){
-        request = client.prepareRequest("/_api/gharial/${this.name}/edge", methode: "post");
+      if (prop != null) {
+        request = client.prepareRequest('/_api/gharial/${name}/edge',
+            methode: 'post');
         request.body = jsonEncode(prop);
-      }
-      else{
-        request = client.prepareRequest("/_api/gharial/${this.name}/edge", methode: "get");
+      } else {
+        request =
+            client.prepareRequest('/_api/gharial/${name}/edge', methode: 'get');
       }
       res = await client.exec(request);
     } catch (e) {
@@ -91,11 +108,14 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> replaceEdgeDefinition(String definition, Map<String, dynamic> data) async{
-    /// Properties of a collection
+  /// Replaces edge definition
+  Future<Map<String, dynamic>> replaceEdgeDefinition(
+      String definition, Map<String, dynamic> data) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/edge/$definition", methode: "put");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/edge/$definition',
+          methode: 'put');
       request.body = jsonEncode(data);
       res = await client.exec(request);
     } catch (e) {
@@ -104,11 +124,13 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> removeEdgeDefinition(String definition) async{
-    /// Properties of a collection
+  /// Removes edge definition
+  Future<Map<String, dynamic>> removeEdgeDefinition(String definition) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/edge/$definition", methode: "delete");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/edge/$definition',
+          methode: 'delete');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -118,11 +140,14 @@ class Graph {
 
   //------------------------------CRUD VERTEX----------------------------------------------------------------------
 
-  Future<Map<String, dynamic>> createVertex(String collection, Map<String, dynamic> data) async{
-    /// Properties of a collection
+  /// Creates a vertex
+  Future<Map<String, dynamic>> createVertex(
+      String collection, Map<String, dynamic> data) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/vertex/$collection", methode: "post");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/vertex/$collection',
+          methode: 'post');
       request.body = jsonEncode(data);
       res = await client.exec(request);
     } catch (e) {
@@ -131,11 +156,14 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> getVertex(String collection, String vertex) async{
-    /// Properties of a collection
+  /// Get a vertex
+  Future<Map<String, dynamic>> getVertex(
+      String collection, String vertex) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/vertex/$collection/$vertex", methode: "get");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/vertex/$collection/$vertex',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -143,11 +171,14 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> updateVertex(String collection, String vertex, Map<String, dynamic> data) async{
-    /// Properties of a collection
+  /// Updates a vertex
+  Future<Map<String, dynamic>> updateVertex(
+      String collection, String vertex, Map<String, dynamic> data) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/vertex/$collection/$vertex", methode: "patch");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/vertex/$collection/$vertex',
+          methode: 'patch');
       request.body = jsonEncode(data);
       res = await client.exec(request);
     } catch (e) {
@@ -156,11 +187,14 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> removeVertex(String collection, String vertex) async{
-    /// Properties of a collection
+  /// Removes a vertex
+  Future<Map<String, dynamic>> removeVertex(
+      String collection, String vertex) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/vertex/$collection/$vertex", methode: "get");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/vertex/$collection/$vertex',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -170,11 +204,14 @@ class Graph {
 
   //------------------------------CRUD EDGE------------------------------------------------------------------------
 
-  Future<Map<String, dynamic>> createEdge(String collection, Map<String, dynamic> data) async{
-    /// Properties of a collection
+  /// Creates an edge
+  Future<Map<String, dynamic>> createEdge(
+      String collection, Map<String, dynamic> data) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/edge/$collection", methode: "post");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/edge/$collection',
+          methode: 'post');
       request.body = jsonEncode(data);
       res = await client.exec(request);
     } catch (e) {
@@ -183,11 +220,13 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> getEdge(String collection, String edge) async{
-    /// Properties of a collection
+  /// Get an edge
+  Future<Map<String, dynamic>> getEdge(String collection, String edge) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/edge/$collection/$edge", methode: "get");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/edge/$collection/$edge',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -195,11 +234,14 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> updateEdge(String collection, String edge, Map<String, dynamic> data) async{
-    /// Properties of a collection
+  /// Uddates an edge
+  Future<Map<String, dynamic>> updateEdge(
+      String collection, String edge, Map<String, dynamic> data) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/edge/$collection/$edge", methode: "patch");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/edge/$collection/$edge',
+          methode: 'patch');
       request.body = jsonEncode(data);
       res = await client.exec(request);
     } catch (e) {
@@ -208,11 +250,14 @@ class Graph {
     return res;
   }
 
-  Future<Map<String, dynamic>> removeEdge(String collection, String edge) async{
-    /// Properties of a collection
+  /// Removes an edge
+  Future<Map<String, dynamic>> removeEdge(
+      String collection, String edge) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial/${this.name}/edge/$collection/$edge", methode: "get");
+      var request = client.prepareRequest(
+          '/_api/gharial/${name}/edge/$collection/$edge',
+          methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);

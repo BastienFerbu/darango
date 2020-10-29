@@ -1,16 +1,13 @@
 part of darango;
 
-enum State {
-  connected,
-  not_connected
-}
+enum State { connected, not_connected }
 
 class Database {
-  String url;
+  final String url;
   String db_name;
   Uri uri;
   String path;
-  String id; 
+  String id;
   String auth;
   State state = State.not_connected;
   bool isSystem;
@@ -18,41 +15,42 @@ class Database {
 
   Database(this.url);
 
-  Future<bool> connect(db_name, username, password, {bool useBasic = true}) async{
+  /// Connect to the db
+  Future<bool> connect(db_name, username, password,
+      {bool useBasic = true}) async {
     this.db_name = db_name;
-    if(useBasic)
-      this.auth = 'Basic ' + base64Encode(utf8.encode('$username:$password'));
-    else{
-      Response response = await post(this.url+"/_open/auth", body: {"username":"$username","password":"$password"});
+    if (useBasic) {
+      auth = 'Basic ' + base64Encode(utf8.encode('$username:$password'));
+    } else {
+      var response = await post(url + '/_open/auth',
+          body: {'username': '$username', 'password': '$password'});
       print(response.body);
     }
-    this.uri = Uri.parse(this.url + "/_db/" + this.db_name);
-    
-    this.client = ArangoClient(this.auth, this.uri);
-    Map<String, dynamic> current = await this.current();
-    if(current != null && !current["error"]){
-      this.state = State.connected;
-      this.path = current["result"]["path"];
-      this.isSystem = current["result"]["isSystem"];
-      this.id = current["result"]["id"];
+    uri = Uri.parse(url + '/_db/' + this.db_name);
+
+    client = ArangoClient(auth, uri);
+    var current = await this.current();
+    if (current != null && !current['error']) {
+      state = State.connected;
+      path = current['result']['path'];
+      isSystem = current['result']['isSystem'];
+      id = current['result']['id'];
       return true;
-    }
-    else{
-      throw ClientException(current["errorMessage"], this.uri);
-      //return false;
+    } else {
+      throw ClientException(current['errorMessage'], uri);
     }
   }
 
-  void close(){
+  /// Close the connection to the db
+  void close() {
     client.close();
   }
 
-
-  Future<Map<String, dynamic>> current() async{
-    /// Retrieve the current database information
+  /// Retrieve the current database information
+  Future<Map<String, dynamic>> current() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/database/current");
+      var request = client.prepareRequest('/_api/database/current');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -60,11 +58,11 @@ class Database {
     return res;
   }
 
-  Future<Map<String, dynamic>> users() async{
-    /// Retrieves a list of all databases the current user can access
+  /// Retrieves a list of all databases the current user can access
+  Future<Map<String, dynamic>> users() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/database/user");
+      var request = client.prepareRequest('/_api/database/user');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -72,11 +70,11 @@ class Database {
     return res;
   }
 
-  Future<Map<String, dynamic>> databases() async{
-    /// Retrieves a list of all existing databases
+  /// Retrieves a list of all existing databases
+  Future<Map<String, dynamic>> databases() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/database");
+      var request = client.prepareRequest('/_api/database');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -84,12 +82,12 @@ class Database {
     return res;
   }
 
-  Future<Map<String, dynamic>> create(Map<String, dynamic> data) async{
-    /// Create a database
+  /// Create a database
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data) async {
     Map<String, dynamic> res;
-    String d = jsonEncode(data);
+    var d = jsonEncode(data);
     try {
-      Request request = client.prepareRequest("/_api/database", methode: "post");
+      var request = client.prepareRequest('/_api/database', methode: 'post');
       request.body = d;
       res = await client.exec(request);
     } catch (e) {
@@ -98,11 +96,12 @@ class Database {
     return res;
   }
 
-  Future<Map<String, dynamic>> drop(String database_name) async{
-    /// Drop a database
+  /// Drop a database
+  Future<Map<String, dynamic>> drop(String database_name) async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/database/$database_name", methode: "delete");
+      var request = client.prepareRequest('/_api/database/$database_name',
+          methode: 'delete');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -110,52 +109,78 @@ class Database {
     return res;
   }
 
-  Future<Collection> collection(String name) async{
-    Request request = client.prepareRequest("/_api/collection/" + name, methode: "get");
+  /// Returns a collection of the db
+  Future<Collection> collection(String name) async {
+    var request =
+        client.prepareRequest('/_api/collection/' + name, methode: 'get');
     Collection collection;
     try {
-      Map<dynamic, dynamic> doc = await client.exec(request);
-      collection = Collection(name: name, id: doc["id"], isSystem: doc["isSystem"], type: doc["type"], status: doc["status"], 
-        globallyUniqueId: doc["globallyUniqueId"], client: this.client);
+      var doc = await client.exec(request);
+      collection = Collection(
+          name: name,
+          id: doc['id'],
+          isSystem: doc['isSystem'],
+          type: doc['type'],
+          status: doc['status'],
+          globallyUniqueId: doc['globallyUniqueId'],
+          client: client);
     } catch (e) {
       print(e);
     }
     return collection;
   }
 
-  Aql aql(){
-    return Aql(this.client);
+  /// Returns an Aql object in order to use AQL query
+  Aql aql() {
+    return Aql(client);
   }
 
-  Transaction transaction(){
-    return Transaction(this.client);
+  /// Returns an Transaction object in order to use transaction
+  Transaction transaction() {
+    return Transaction(client);
   }
 
-  Future<Graph> graph(String name) async{
-    Request request = client.prepareRequest("/_api/gharial/" + name, methode: "get");
-    Map<dynamic, dynamic> doc = await client.exec(request);
-    if(doc != null){
-      Graph graph = Graph(name: name, id: doc["_id"], key: doc["_key"], rev: doc["_rev"], replicationFactor: doc["replicationFactor"], 
-        minReplicationFactor: doc["minReplicationFactor"], numberOfShards: doc["numberOfShards"],  isSmart: doc["isSmart"], 
-        orphanCollections: doc["orphanCollections"], edgeDefinitions: doc["edgeDefinitions"], client: this.client);
+  /// Returns an Graph object in order to use graph
+  Future<Graph> graph(String name) async {
+    var request =
+        client.prepareRequest('/_api/gharial/' + name, methode: 'get');
+    var doc = await client.exec(request);
+    if (doc != null) {
+      var graph = Graph(
+          name: name,
+          id: doc['_id'],
+          key: doc['_key'],
+          rev: doc['_rev'],
+          replicationFactor: doc['replicationFactor'],
+          minReplicationFactor: doc['minReplicationFactor'],
+          numberOfShards: doc['numberOfShards'],
+          isSmart: doc['isSmart'],
+          orphanCollections: doc['orphanCollections'],
+          edgeDefinitions: doc['edgeDefinitions'],
+          client: client);
       return graph;
-    }
-    else{
+    } else {
       return null;
     }
   }
 
-  Future<Collection> createCollection(Map<String, dynamic> data) async{
-    /// Create collection
+  /// Create collection
+  Future<Collection> createCollection(Map<String, dynamic> data) async {
     Map<String, dynamic> res;
     Collection collection;
-    String d = jsonEncode(data);
+    var d = jsonEncode(data);
     try {
-      Request request = client.prepareRequest("/_api/collection", methode: "post");
+      var request = client.prepareRequest('/_api/collection', methode: 'post');
       request.body = d;
       res = await client.exec(request);
-      collection = Collection(name: res["name"], id: res["id"], isSystem: res["isSystem"], type: res["type"], status: res["status"],
-        globallyUniqueId: res["globallyUniqueId"], client: this.client);
+      collection = Collection(
+          name: res['name'],
+          id: res['id'],
+          isSystem: res['isSystem'],
+          type: res['type'],
+          status: res['status'],
+          globallyUniqueId: res['globallyUniqueId'],
+          client: client);
     } catch (e) {
       print(e);
       return null;
@@ -163,18 +188,27 @@ class Database {
     return collection;
   }
 
-  Future<Graph> createGraph(Map<String, dynamic> data) async{
-    /// Create collection
+  /// Create graph
+  Future<Graph> createGraph(Map<String, dynamic> data) async {
     Map<String, dynamic> doc;
     Graph graph;
-    String d = jsonEncode(data);
+    var d = jsonEncode(data);
     try {
-      Request request = client.prepareRequest("/_api/gharial", methode: "post");
+      var request = client.prepareRequest('/_api/gharial', methode: 'post');
       request.body = d;
       doc = await client.exec(request);
-      graph = Graph(name: doc["name"], id: doc["_id"], key: doc["_key"], rev: doc["_rev"], replicationFactor: doc["replicationFactor"], 
-        minReplicationFactor: doc["minReplicationFactor"], numberOfShards: doc["numberOfShards"],  isSmart: doc["isSmart"], 
-        orphanCollections: doc["orphanCollections"], edgeDefinitions: doc["edgeDefinitions"], client: this.client);
+      graph = Graph(
+          name: doc['name'],
+          id: doc['_id'],
+          key: doc['_key'],
+          rev: doc['_rev'],
+          replicationFactor: doc['replicationFactor'],
+          minReplicationFactor: doc['minReplicationFactor'],
+          numberOfShards: doc['numberOfShards'],
+          isSmart: doc['isSmart'],
+          orphanCollections: doc['orphanCollections'],
+          edgeDefinitions: doc['edgeDefinitions'],
+          client: client);
     } catch (e) {
       print(e);
       return null;
@@ -182,11 +216,11 @@ class Database {
     return graph;
   }
 
-  Future<Map<String, dynamic>> collections() async{
-    /// Returns all collections
+  /// Returns all collections
+  Future<Map<String, dynamic>> collections() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/collection", methode: "get");
+      var request = client.prepareRequest('/_api/collection', methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -194,11 +228,11 @@ class Database {
     return res;
   }
 
-  Future<Map<String, dynamic>> graphs() async{
-    /// Returns all collections
+  /// Returns all graphs
+  Future<Map<String, dynamic>> graphs() async {
     Map<String, dynamic> res;
     try {
-      Request request = client.prepareRequest("/_api/gharial", methode: "get");
+      var request = client.prepareRequest('/_api/gharial', methode: 'get');
       res = await client.exec(request);
     } catch (e) {
       print(e);
@@ -206,14 +240,20 @@ class Database {
     return res;
   }
 
-  Future<Map<String, dynamic>> edges(String collection, String vertex, {String direction}) async{
+  /// Returns all edges
+  Future<Map<String, dynamic>> edges(String collection, String vertex,
+      {String direction}) async {
     Map<String, dynamic> res;
     try {
       Request request;
-      if(direction != null) 
-        request = client.prepareRequest("/_api/edges/${this.id}?vertex=$vertex", methode: "get");
-      else 
-        request = client.prepareRequest("/_api/edges/${this.id}?vertex=$vertex&direction=$direction", methode: "get");
+      if (direction != null) {
+        request = client.prepareRequest('/_api/edges/$id?vertex=$vertex',
+            methode: 'get');
+      } else {
+        request = client.prepareRequest(
+            '/_api/edges/$id?vertex=$vertex&direction=$direction',
+            methode: 'get');
+      }
       res = await client.exec(request);
     } catch (e) {
       print(e);
