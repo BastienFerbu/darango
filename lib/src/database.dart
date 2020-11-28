@@ -37,7 +37,7 @@ class Database {
       id = current['result']['id'];
       return true;
     } else {
-      throw ClientException(current['errorMessage'], uri);
+      throw ClientException('No connection', uri);
     }
   }
 

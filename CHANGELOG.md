@@ -1,3 +1,7 @@
+## [0.0.16] - 28/11/2020.
+
+* Correct exception
+
 ## [0.0.15] - 28/10/2020.
 
 * Dart formating
