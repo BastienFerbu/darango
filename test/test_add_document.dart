@@ -6,7 +6,7 @@ Future<void> main(List<String> args) async {
   database = Database(url);
   await database.connect(database_name, username, password);
 
-  Collection usersCollection;
+  Collection? usersCollection;
   usersCollection = await database.collection('users');
 
   if (usersCollection != null) {

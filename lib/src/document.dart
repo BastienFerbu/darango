@@ -1,13 +1,13 @@
 part of darango;
 
 class Document {
-  String id;
-  String key;
-  String rev;
+  String? id;
+  String? key;
+  String? rev;
   dynamic data;
   Collection collection;
 
-  Document({this.collection, this.key, this.id});
+  Document({required this.collection, this.key, this.id});
 
   /// Returns a Map of the Document itself
   Map<String, dynamic> toMap({var separated = false}) {
@@ -27,13 +27,13 @@ class Document {
   String toString({var separated = false}) =>
       toMap(separated: separated).toString();
 
-  /// Add a document in the colleciton
+  /// Add a document in the collection
   Future<Document> add(Map<String, dynamic> data,
-      {bool waitForSync,
-      bool returnNew,
-      bool returnOld,
-      bool silent,
-      bool overwrite}) async {
+      {bool? waitForSync,
+      bool? returnNew,
+      bool? returnOld,
+      bool? silent,
+      bool? overwrite}) async {
     var d = jsonEncode(data);
     var url = formatUrl('/_api/document/${collection.name}',
         waitForSync: waitForSync,
@@ -42,6 +42,7 @@ class Document {
         silent: silent,
         overwrite: overwrite);
     var request = collection.client.prepareRequest(url, methode: 'post');
+
     request.body = d;
     Map<dynamic, dynamic> doc;
     doc = await collection.client.exec(request);
@@ -67,12 +68,12 @@ class Document {
 
   /// Updates a document
   Future<Document> update(Map<String, dynamic> data,
-      {bool waitForSync,
-      bool returnNew,
-      bool returnOld,
-      bool silent,
-      bool overwrite,
-      bool keepNull}) async {
+      {bool? waitForSync,
+      bool? returnNew,
+      bool? returnOld,
+      bool? silent,
+      bool? overwrite,
+      bool? keepNull}) async {
     data.remove('_id');
     data.remove('_key');
     data.remove('_rev');
@@ -95,53 +96,53 @@ class Document {
 
   /// Formats an url for the http request with parameters
   String formatUrl(String url,
-      {bool waitForSync,
-      bool returnNew,
-      bool returnOld,
-      bool silent,
-      bool overwrite,
-      bool ignoreRevs,
-      bool mergeObjects,
-      bool keepNull}) {
-    var formatedUrl = '$url?';
+      {bool? waitForSync,
+      bool? returnNew,
+      bool? returnOld,
+      bool? silent,
+      bool? overwrite,
+      bool? ignoreRevs,
+      bool? mergeObjects,
+      bool? keepNull}) {
+    var formattedUrl = '$url?';
     if (waitForSync != null && waitForSync) {
-      formatedUrl += 'waitForSync=true&';
+      formattedUrl += 'waitForSync=true&';
     }
     if (returnNew != null && returnNew) {
-      formatedUrl += 'returnNew=true&';
+      formattedUrl += 'returnNew=true&';
     }
     if (returnOld != null && returnOld) {
-      formatedUrl += 'returnOld=true&';
+      formattedUrl += 'returnOld=true&';
     }
     if (silent != null && silent) {
-      formatedUrl += 'silent=true&';
+      formattedUrl += 'silent=true&';
     }
     if (overwrite != null && overwrite) {
-      formatedUrl += 'overwrite=true&';
+      formattedUrl += 'overwrite=true&';
     }
     if (ignoreRevs != null && ignoreRevs) {
-      formatedUrl += 'ignoreRevs=true&';
+      formattedUrl += 'ignoreRevs=true&';
     }
     if (mergeObjects != null && mergeObjects) {
-      formatedUrl += 'mergeObjects=true&';
+      formattedUrl += 'mergeObjects=true&';
     }
     if (keepNull != null && keepNull) {
-      formatedUrl += 'keepNull=true&';
+      formattedUrl += 'keepNull=true&';
     }
-    formatedUrl = formatedUrl.substring(0, formatedUrl.length - 1);
-    return formatedUrl;
+    formattedUrl = formattedUrl.substring(0, formattedUrl.length - 1);
+    return formattedUrl;
   }
 
   /// Deletes a document
-  void delete() async {
+  Future<void> delete() async {
     var request = collection.client
         .prepareRequest('/_api/document/${id}', methode: 'delete');
     await collection.client.send(request);
   }
 
   /// Returns head
-  Future<Map<String, dynamic>> head() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> head() async {
+    Map<String, dynamic>? res;
     try {
       var request = collection.client
           .prepareRequest('/_api/document/${id}', methode: 'head');
@@ -152,9 +153,9 @@ class Document {
     return res;
   }
 
-  /// Returns all documents of a colleciton
-  Future<Map<String, dynamic>> allDocuments(String col, {String type}) async {
-    Map<String, dynamic> res;
+  /// Returns all documents of a collection
+  Future<Map<String, dynamic>?> allDocuments(String col, {String? type}) async {
+    Map<String, dynamic>? res;
     try {
       var request = collection.client
           .prepareRequest('/_api/simple/all-keys', methode: 'put');
@@ -170,11 +171,11 @@ class Document {
 
   /// Replaces a document
   Future<Document> replace(Map<String, dynamic> data,
-      {bool waitForSync,
-      bool returnNew,
-      bool returnOld,
-      bool silent,
-      bool overwrite}) async {
+      {bool? waitForSync,
+      bool? returnNew,
+      bool? returnOld,
+      bool? silent,
+      bool? overwrite}) async {
     data.remove('_id');
     data.remove('_key');
     data.remove('_rev');
@@ -196,10 +197,10 @@ class Document {
 
   /// Replaces all documents
   Future<Document> replaceAllDocuments(Map<String, dynamic> data, String col,
-      {bool waitForSync,
-      bool returnNew,
-      bool returnOld,
-      bool ignoreRevs}) async {
+      {bool? waitForSync,
+      bool? returnNew,
+      bool? returnOld,
+      bool? ignoreRevs}) async {
     data.remove('_id');
     data.remove('_key');
     data.remove('_rev');
@@ -220,12 +221,12 @@ class Document {
 
   /// Updates all documents
   Future<Document> updateAllDocuments(Map<String, dynamic> data, String col,
-      {bool waitForSync,
-      bool returnNew,
-      bool returnOld,
-      bool ignoreRevs,
-      bool mergeObjects,
-      bool keepNull}) async {
+      {bool? waitForSync,
+      bool? returnNew,
+      bool? returnOld,
+      bool? ignoreRevs,
+      bool? mergeObjects,
+      bool? keepNull}) async {
     data.remove('_id');
     data.remove('_key');
     data.remove('_rev');

@@ -1,17 +1,17 @@
 part of darango;
 
-enum State { connected, not_connected }
+enum ConnectionState { connected, not_connected }
 
 class Database {
   final String url;
-  String db_name;
-  Uri uri;
-  String path;
-  String id;
-  String auth;
-  State state = State.not_connected;
-  bool isSystem;
-  ArangoClient client;
+  late String db_name;
+  late Uri uri;
+  late String path;
+  late String id;
+  String? auth;
+  ConnectionState state = ConnectionState.not_connected;
+  late bool isSystem;
+  late ArangoClient client;
 
   Database(this.url);
 
@@ -22,16 +22,16 @@ class Database {
     if (useBasic) {
       auth = 'Basic ' + base64Encode(utf8.encode('$username:$password'));
     } else {
-      var response = await post(url + '/_open/auth',
+      var response = await post(Uri.parse(url + '/_open/auth'),
           body: {'username': '$username', 'password': '$password'});
       print(response.body);
     }
-    uri = Uri.parse(url + '/_db/' + this.db_name);
+    uri = Uri.parse(url + '/_db/' + this.db_name!);
 
-    client = ArangoClient(auth, uri);
+    client = ArangoClient(auth, uri!);
     var current = await this.current();
     if (current != null && !current['error']) {
-      state = State.connected;
+      state = ConnectionState.connected;
       path = current['result']['path'];
       isSystem = current['result']['isSystem'];
       id = current['result']['id'];
@@ -47,8 +47,8 @@ class Database {
   }
 
   /// Retrieve the current database information
-  Future<Map<String, dynamic>> current() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> current() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/database/current');
       res = await client.exec(request);
@@ -59,8 +59,8 @@ class Database {
   }
 
   /// Retrieves a list of all databases the current user can access
-  Future<Map<String, dynamic>> users() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> users() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/database/user');
       res = await client.exec(request);
@@ -71,8 +71,8 @@ class Database {
   }
 
   /// Retrieves a list of all existing databases
-  Future<Map<String, dynamic>> databases() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> databases() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/database');
       res = await client.exec(request);
@@ -83,8 +83,8 @@ class Database {
   }
 
   /// Create a database
-  Future<Map<String, dynamic>> create(Map<String, dynamic> data) async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> create(Map<String, dynamic> data) async {
+    Map<String, dynamic>? res;
     var d = jsonEncode(data);
     try {
       var request = client.prepareRequest('/_api/database', methode: 'post');
@@ -97,8 +97,8 @@ class Database {
   }
 
   /// Drop a database
-  Future<Map<String, dynamic>> drop(String database_name) async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> drop(String database_name) async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/database/$database_name',
           methode: 'delete');
@@ -110,10 +110,10 @@ class Database {
   }
 
   /// Returns a collection of the db
-  Future<Collection> collection(String name) async {
+  Future<Collection?> collection(String name) async {
     var request =
         client.prepareRequest('/_api/collection/' + name, methode: 'get');
-    Collection collection;
+    Collection? collection;
     try {
       var doc = await client.exec(request);
       collection = Collection(
@@ -141,7 +141,7 @@ class Database {
   }
 
   /// Returns an Graph object in order to use graph
-  Future<Graph> graph(String name) async {
+  Future<Graph?> graph(String name) async {
     var request =
         client.prepareRequest('/_api/gharial/' + name, methode: 'get');
     var doc = await client.exec(request);
@@ -165,7 +165,7 @@ class Database {
   }
 
   /// Create collection
-  Future<Collection> createCollection(Map<String, dynamic> data) async {
+  Future<Collection?> createCollection(Map<String, dynamic> data) async {
     Map<String, dynamic> res;
     Collection collection;
     var d = jsonEncode(data);
@@ -189,7 +189,7 @@ class Database {
   }
 
   /// Create graph
-  Future<Graph> createGraph(Map<String, dynamic> data) async {
+  Future<Graph?> createGraph(Map<String, dynamic> data) async {
     Map<String, dynamic> doc;
     Graph graph;
     var d = jsonEncode(data);
@@ -217,8 +217,8 @@ class Database {
   }
 
   /// Returns all collections
-  Future<Map<String, dynamic>> collections() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> collections() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection', methode: 'get');
       res = await client.exec(request);
@@ -229,8 +229,8 @@ class Database {
   }
 
   /// Returns all graphs
-  Future<Map<String, dynamic>> graphs() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> graphs() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/gharial', methode: 'get');
       res = await client.exec(request);
@@ -241,9 +241,9 @@ class Database {
   }
 
   /// Returns all edges
-  Future<Map<String, dynamic>> edges(String collection, String vertex,
-      {String direction}) async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> edges(String collection, String vertex,
+      {String? direction}) async {
+    Map<String, dynamic>? res;
     try {
       Request request;
       if (direction != null) {

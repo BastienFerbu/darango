@@ -8,11 +8,11 @@ Future<void> main(List<String> args) async {
 
   await database.connect(database_name, username, password);
 
-  Collection usersCollection;
+  Collection? usersCollection;
   usersCollection = await database.collection('users');
 
   Document doc;
-  doc = await usersCollection.document(document_handle: id).get();
+  doc = await usersCollection!.document(document_handle: id).get();
   print(doc.data);
   await usersCollection.document(document_handle: doc.id).delete();
 
