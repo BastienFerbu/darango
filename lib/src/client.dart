@@ -1,9 +1,9 @@
 part of darango;
 
 class ArangoClient extends BaseClient {
-  String? auth;
+  final String? auth;
   final Client _inner = Client();
-  Uri uri;
+  final Uri uri;
 
   ArangoClient(this.auth, this.uri);
 
