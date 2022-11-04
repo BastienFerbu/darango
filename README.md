@@ -59,5 +59,5 @@ print(result["result"]);
 
 ***
 ## TODO
-* JWT auth
+* JWT auth refresh after one hour
 * ...
