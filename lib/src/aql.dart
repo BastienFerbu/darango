@@ -7,7 +7,7 @@ class Aql {
   Future<dynamic> run(String query,
       {bool count = true,
       int batchSize = 2,
-      Map<String, dynamic> options}) async {
+      Map<String, dynamic>? options}) async {
     var request = client.prepareRequest('/_api/cursor', methode: 'post');
     if (options != null) {
       request.body = jsonEncode({
@@ -29,7 +29,7 @@ class Aql {
     }
   }
 
-  Future<dynamic> explain(String query, {Map<String, dynamic> options}) async {
+  Future<dynamic> explain(String query, {Map<String, dynamic>? options}) async {
     var request = client.prepareRequest('/_api/explain', methode: 'post');
     if (options != null) {
       request.body = jsonEncode({'query': query, 'options': options});

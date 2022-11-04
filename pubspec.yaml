@@ -1,14 +1,14 @@
 name: darango
-version: 0.0.16
+version: 0.1.0
 author: "Bastien FERBU <bastien.ferbu@gmail.com>"
 homepage: https://github.com/BastienFerbu/darango
 description: A Dart driver for ArangoDB. It use the ArangoDB HTTP REST API.
 
 environment:
-  sdk: ">=2.4.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  http: ^0.12.0+2
+  http: ^0.13.5
 
 dev_dependencies:
   pedantic: ^1.9.0

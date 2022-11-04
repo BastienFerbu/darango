@@ -1,3 +1,8 @@
+## [0.1.0] - 3/11/2022.
+
+* Null safe
+* Updated HTTP dependency
+
 ## [0.0.16] - 28/11/2020.
 
 * Correct exception

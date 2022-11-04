@@ -1,7 +1,7 @@
 part of darango;
 
 class ArangoClient extends BaseClient {
-  String auth;
+  String? auth;
   final Client _inner = Client();
   Uri uri;
 
@@ -23,16 +23,17 @@ class ArangoClient extends BaseClient {
   Request prepareRequest(String url,
       {String methode = 'get', String content_type = 'application/json'}) {
     var u = concatUri(url);
-    return Request(methode, u)
-      ..headers['Authorization'] = auth
-      ..headers['Content-Type'] = content_type;
+    var request = Request(methode, u);
+    if (auth != null) request.headers['Authorization'] = auth!;
+    request.headers['Content-Type'] = content_type;
+    return request;
   }
 
   /// Sends the http request and returns the response as a Map
-  Future<Map<dynamic, dynamic>> exec(Request request) async {
+  Future<Map<String, dynamic>> exec(Request request) async {
     var response = await send(request);
     var doc_str = await response.stream.bytesToString();
-    Map<dynamic, dynamic> doc = jsonDecode(doc_str);
+    Map<String, dynamic> doc = jsonDecode(doc_str);
     if (doc['error'] != null && doc['error']) {
       var message = 'ClientException : ${doc['errorMessage']} [${doc['code']}]';
       throw ClientException(message, request.url);

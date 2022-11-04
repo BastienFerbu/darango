@@ -10,13 +10,13 @@ class Collection {
   ArangoClient client;
 
   Collection(
-      {this.name,
-      this.id,
-      this.isSystem,
-      this.type,
-      this.status,
-      this.globallyUniqueId,
-      this.client});
+      {required this.name,
+      required this.id,
+      required this.isSystem,
+      required this.type,
+      required this.status,
+      required this.globallyUniqueId,
+      required this.client});
 
   /// Returns info of the collection
   Future<String> info() async {
@@ -27,8 +27,8 @@ class Collection {
   }
 
   /// Drop a collection
-  Future<Map<String, dynamic>> drop() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> drop() async {
+    Map<String, dynamic>? res;
     try {
       var request =
           client.prepareRequest('/_api/collection/${name}', methode: 'delete');
@@ -40,8 +40,8 @@ class Collection {
   }
 
   /// Truncate a collection
-  Future<Map<String, dynamic>> truncate() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> truncate() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/truncate',
           methode: 'put');
@@ -53,8 +53,8 @@ class Collection {
   }
 
   /// Returns properties of a collection
-  Future<Map<String, dynamic>> properties({Map<String, dynamic> prop}) async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> properties({Map<String, dynamic>? prop}) async {
+    Map<String, dynamic>? res;
     try {
       Request request;
       if (prop != null) {
@@ -73,8 +73,8 @@ class Collection {
   }
 
   /// Count document of the collection
-  Future<Map<String, dynamic>> count() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> count() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/properties',
           methode: 'get');
@@ -86,8 +86,8 @@ class Collection {
   }
 
   /// Fetch the statistics of a collection
-  Future<Map<String, dynamic>> figures() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> figures() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/figures',
           methode: 'get');
@@ -99,8 +99,8 @@ class Collection {
   }
 
   /// Return the responsible shard for a document
-  Future<Map<String, dynamic>> responsibleShard() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> responsibleShard() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest(
           '/_api/collection/${name}/responsibleShard',
@@ -113,8 +113,8 @@ class Collection {
   }
 
   /// Return the shard ids of a collection
-  Future<Map<String, dynamic>> shards() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> shards() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/shards',
           methode: 'get');
@@ -126,8 +126,8 @@ class Collection {
   }
 
   /// Retrieve the collections revision id
-  Future<Map<String, dynamic>> revision() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> revision() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/revision',
           methode: 'get');
@@ -139,8 +139,8 @@ class Collection {
   }
 
   /// Returns a checksum for the specified collection
-  Future<Map<String, dynamic>> checksum() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> checksum() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/checksum',
           methode: 'get');
@@ -152,8 +152,8 @@ class Collection {
   }
 
   /// Loads a collection
-  Future<Map<String, dynamic>> load() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> load() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/load',
           methode: 'put');
@@ -165,8 +165,8 @@ class Collection {
   }
 
   /// Unloads a collection
-  Future<Map<String, dynamic>> unload() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> unload() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/unload',
           methode: 'put');
@@ -178,8 +178,8 @@ class Collection {
   }
 
   /// Rename a collection
-  Future<Map<String, dynamic>> rename(String new_name) async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> rename(String new_name) async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/rename',
           methode: 'put');
@@ -192,8 +192,8 @@ class Collection {
   }
 
   /// Rotate a collection
-  Future<Map<String, dynamic>> rotate() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> rotate() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/rotate',
           methode: 'put');
@@ -204,23 +204,23 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>> recalculateCount() async {
-    Map<String, dynamic> res;
+  Future<Map<String, dynamic>?> recalculateCount() async {
+    Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest(
           '/_api/collection/${name}/recalculateCount',
           methode: 'put');
-      res = await client.exec(request);
+      res = (await client.exec(request))!.cast<String, dynamic>();
     } catch (e) {
       print(e);
     }
     return res;
   }
 
-  /// Return a document of the colleciton
+  /// Return a document of the collection
   ///
   /// document_handle can be either _id or _key
-  Document document({String document_handle}) {
+  Document document({String? document_handle}) {
     String key, id;
     if (document_handle == null) {
       return Document(collection: this);
