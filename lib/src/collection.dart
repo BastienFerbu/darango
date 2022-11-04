@@ -210,7 +210,7 @@ class Collection {
       var request = client.prepareRequest(
           '/_api/collection/${name}/recalculateCount',
           methode: 'put');
-      res = (await client.exec(request))!.cast<String, dynamic>();
+      res = (await client.exec(request)).cast<String, dynamic>();
     } catch (e) {
       print(e);
     }
