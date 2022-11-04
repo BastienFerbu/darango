@@ -25,10 +25,12 @@ class Database {
       var response = await post(Uri.parse(url + '/_open/auth'),
           body: {'username': '$username', 'password': '$password'});
       print(response.body);
+      auth = 'bearer ' + jsonDecode(response.body)['jwt'];
+      // TODO: JWT will expire after one hour by default
     }
-    uri = Uri.parse(url + '/_db/' + this.db_name!);
+    uri = Uri.parse(url + '/_db/' + this.db_name);
 
-    client = ArangoClient(auth, uri!);
+    client = ArangoClient(auth, uri);
     var current = await this.current();
     if (current != null && !current['error']) {
       state = ConnectionState.connected;
