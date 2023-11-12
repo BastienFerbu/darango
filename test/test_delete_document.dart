@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:darango/darango.dart';
 import 'darango_test.dart';
 
-Future<void> main(List<String> args) async {
+FutureOr<void> main(List<String> args) async {
   var id = 'users/139196';
   Database database;
   database = Database(url);

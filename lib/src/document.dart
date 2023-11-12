@@ -28,7 +28,7 @@ class Document {
       toMap(separated: separated).toString();
 
   /// Add a document in the collection
-  Future<Document> add(Map<String, dynamic> data,
+  FutureOr<Document> add(Map<String, dynamic> data,
       {bool? waitForSync,
       bool? returnNew,
       bool? returnOld,
@@ -54,7 +54,7 @@ class Document {
   }
 
   /// Get a document
-  Future<Document> get() async {
+  FutureOr<Document> get() async {
     var request = collection.client.prepareRequest('/_api/document/${id}');
     var streamedResponse = await collection.client.send(request);
     var doc_str = await streamedResponse.stream.bytesToString();
@@ -67,7 +67,7 @@ class Document {
   }
 
   /// Updates a document
-  Future<Document> update(Map<String, dynamic> data,
+  FutureOr<Document> update(Map<String, dynamic> data,
       {bool? waitForSync,
       bool? returnNew,
       bool? returnOld,
@@ -134,14 +134,14 @@ class Document {
   }
 
   /// Deletes a document
-  Future<void> delete() async {
+  FutureOr<void> delete() async {
     var request = collection.client
         .prepareRequest('/_api/document/${id}', methode: 'delete');
     await collection.client.send(request);
   }
 
   /// Returns head
-  Future<Map<String, dynamic>?> head() async {
+  FutureOr<Map<String, dynamic>?> head() async {
     Map<String, dynamic>? res;
     try {
       var request = collection.client
@@ -154,7 +154,7 @@ class Document {
   }
 
   /// Returns all documents of a collection
-  Future<Map<String, dynamic>?> allDocuments(String col, {String? type}) async {
+  FutureOr<Map<String, dynamic>?> allDocuments(String col, {String? type}) async {
     Map<String, dynamic>? res;
     try {
       var request = collection.client
@@ -170,7 +170,7 @@ class Document {
   }
 
   /// Replaces a document
-  Future<Document> replace(Map<String, dynamic> data,
+  FutureOr<Document> replace(Map<String, dynamic> data,
       {bool? waitForSync,
       bool? returnNew,
       bool? returnOld,
@@ -196,7 +196,7 @@ class Document {
   }
 
   /// Replaces all documents
-  Future<Document> replaceAllDocuments(Map<String, dynamic> data, String col,
+  FutureOr<Document> replaceAllDocuments(Map<String, dynamic> data, String col,
       {bool? waitForSync,
       bool? returnNew,
       bool? returnOld,
@@ -220,7 +220,7 @@ class Document {
   }
 
   /// Updates all documents
-  Future<Document> updateAllDocuments(Map<String, dynamic> data, String col,
+  FutureOr<Document> updateAllDocuments(Map<String, dynamic> data, String col,
       {bool? waitForSync,
       bool? returnNew,
       bool? returnOld,

@@ -19,7 +19,7 @@ class Collection {
       required this.client});
 
   /// Returns info of the collection
-  Future<String> info() async {
+  FutureOr<String> info() async {
     var request = client.prepareRequest('/_api/collection/' + name);
     var streamedResponse = await client.send(request);
     var res = await streamedResponse.stream.bytesToString();
@@ -27,7 +27,7 @@ class Collection {
   }
 
   /// Drop a collection
-  Future<Map<String, dynamic>?> drop() async {
+  FutureOr<Map<String, dynamic>?> drop() async {
     Map<String, dynamic>? res;
     try {
       var request =
@@ -40,7 +40,7 @@ class Collection {
   }
 
   /// Truncate a collection
-  Future<Map<String, dynamic>?> truncate() async {
+  FutureOr<Map<String, dynamic>?> truncate() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/truncate',
@@ -53,7 +53,7 @@ class Collection {
   }
 
   /// Returns properties of a collection
-  Future<Map<String, dynamic>?> properties({Map<String, dynamic>? prop}) async {
+  FutureOr<Map<String, dynamic>?> properties({Map<String, dynamic>? prop}) async {
     Map<String, dynamic>? res;
     try {
       Request request;
@@ -73,7 +73,7 @@ class Collection {
   }
 
   /// Count document of the collection
-  Future<Map<String, dynamic>?> count() async {
+  FutureOr<Map<String, dynamic>?> count() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/properties',
@@ -86,7 +86,7 @@ class Collection {
   }
 
   /// Fetch the statistics of a collection
-  Future<Map<String, dynamic>?> figures() async {
+  FutureOr<Map<String, dynamic>?> figures() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/figures',
@@ -99,7 +99,7 @@ class Collection {
   }
 
   /// Return the responsible shard for a document
-  Future<Map<String, dynamic>?> responsibleShard() async {
+  FutureOr<Map<String, dynamic>?> responsibleShard() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest(
@@ -113,7 +113,7 @@ class Collection {
   }
 
   /// Return the shard ids of a collection
-  Future<Map<String, dynamic>?> shards() async {
+  FutureOr<Map<String, dynamic>?> shards() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/shards',
@@ -126,7 +126,7 @@ class Collection {
   }
 
   /// Retrieve the collections revision id
-  Future<Map<String, dynamic>?> revision() async {
+  FutureOr<Map<String, dynamic>?> revision() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/revision',
@@ -139,7 +139,7 @@ class Collection {
   }
 
   /// Returns a checksum for the specified collection
-  Future<Map<String, dynamic>?> checksum() async {
+  FutureOr<Map<String, dynamic>?> checksum() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/checksum',
@@ -152,7 +152,7 @@ class Collection {
   }
 
   /// Loads a collection
-  Future<Map<String, dynamic>?> load() async {
+  FutureOr<Map<String, dynamic>?> load() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/load',
@@ -165,7 +165,7 @@ class Collection {
   }
 
   /// Unloads a collection
-  Future<Map<String, dynamic>?> unload() async {
+  FutureOr<Map<String, dynamic>?> unload() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/unload',
@@ -178,7 +178,7 @@ class Collection {
   }
 
   /// Rename a collection
-  Future<Map<String, dynamic>?> rename(String new_name) async {
+  FutureOr<Map<String, dynamic>?> rename(String new_name) async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/rename',
@@ -192,7 +192,7 @@ class Collection {
   }
 
   /// Rotate a collection
-  Future<Map<String, dynamic>?> rotate() async {
+  FutureOr<Map<String, dynamic>?> rotate() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest('/_api/collection/${name}/rotate',
@@ -204,7 +204,7 @@ class Collection {
     return res;
   }
 
-  Future<Map<String, dynamic>?> recalculateCount() async {
+  FutureOr<Map<String, dynamic>?> recalculateCount() async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest(

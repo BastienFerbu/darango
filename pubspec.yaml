@@ -4,9 +4,11 @@ homepage: https://github.com/BastienFerbu/darango
 description: A Dart driver for ArangoDB. It use the ArangoDB HTTP REST API.
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: '>=2.19.6 <4.0.0'
 
 dependencies:
+  flutter:
+    sdk: flutter
   http: ^1.1.0
 
 dev_dependencies:

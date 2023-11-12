@@ -1,17 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:darango/darango.dart';
 
-Database database;
+late Database database;
 
-Collection usersCollection;
+late Collection usersCollection;
 
 void initArangoDB() async {
   database = Database('http://10.0.2.2:8529');
   await database.connect('', '', '');
-  usersCollection = await database.collection('users');
+  usersCollection = (await database.collection('users'))!;
 }
 
-Future<dynamic> getUser(String id) async {
+FutureOr<dynamic> getUser(String id) async {
   Document doc;
   doc = await usersCollection.document(document_handle: id).get();
   print(doc.data);
@@ -19,7 +21,7 @@ Future<dynamic> getUser(String id) async {
 }
 
 void main() async {
-  await initArangoDB();
+  initArangoDB();
   runApp(MyApp());
 }
 
