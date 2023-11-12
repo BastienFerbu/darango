@@ -45,7 +45,7 @@ class ArangoClient extends BaseClient {
 
   /// Sends the http request
   @override
-  FutureOr<StreamedResponse> send(BaseRequest request) {
+  Future<StreamedResponse> send(BaseRequest request) {
     return _inner.send(request);
   }
 }
