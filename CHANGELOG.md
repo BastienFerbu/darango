@@ -1,3 +1,8 @@
+## [0.2.0] - 12/11/2023.
+
+* Updated http library to 1.1.0
+* Updated Flutter SDK to 2.19.6
+
 ## [0.1.1] - 4/11/2022.
 
 * Added JWT support

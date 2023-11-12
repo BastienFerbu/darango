@@ -5,7 +5,7 @@ class Transaction {
   Transaction(this.client);
 
   /// Executes a transaction
-  Future<Map<dynamic, dynamic>?> executeTransaction(dynamic collections, String action,
+  FutureOr<Map<dynamic, dynamic>?> executeTransaction(dynamic collections, String action,
       {String? params,
       bool waitForSync = true,
       bool allowImplicit = true,
@@ -32,7 +32,7 @@ class Transaction {
   }
 
   /// Begins a transaction
-  Future<Map<dynamic, dynamic>?> begin(dynamic collections) async {
+  FutureOr<Map<dynamic, dynamic>?> begin(dynamic collections) async {
     var request =
         client.prepareRequest('/_api/transaction/begin', methode: 'post');
     request.body = collections;
@@ -47,7 +47,7 @@ class Transaction {
   }
 
   /// Commits a transaction
-  Future<Map<dynamic, dynamic>?> commit(int id) async {
+  FutureOr<Map<dynamic, dynamic>?> commit(int id) async {
     var request =
         client.prepareRequest('/_api/transaction/$id', methode: 'put');
     Map<dynamic, dynamic> doc;
@@ -61,7 +61,7 @@ class Transaction {
   }
 
   /// Aborts a transaction
-  Future<Map<dynamic, dynamic>?> abort(int id) async {
+  FutureOr<Map<dynamic, dynamic>?> abort(int id) async {
     var request =
         client.prepareRequest('/_api/transaction/$id', methode: 'delete');
     Map<dynamic, dynamic> doc;

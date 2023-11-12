@@ -30,7 +30,7 @@ class ArangoClient extends BaseClient {
   }
 
   /// Sends the http request and returns the response as a Map
-  Future<Map<String, dynamic>> exec(Request request) async {
+  FutureOr<Map<String, dynamic>> exec(Request request) async {
     var response = await send(request);
     var doc_str = await response.stream.bytesToString();
     Map<String, dynamic> doc = jsonDecode(doc_str);

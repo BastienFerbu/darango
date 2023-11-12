@@ -27,7 +27,7 @@ class Graph {
       required this.edgeDefinitions,
       required this.client});
 
-  Future<Graph> get() async {
+  FutureOr<Graph> get() async {
     var request = client.prepareRequest('/_api/gharial/' + name);
     var streamedResponse = await client.send(request);
     var doc_str = await streamedResponse.stream.bytesToString();
@@ -40,7 +40,7 @@ class Graph {
   }
 
   /// Drop a graph
-  Future<Map<String, dynamic>?> drop() async {
+  FutureOr<Map<String, dynamic>?> drop() async {
     Map<String, dynamic>? res;
     try {
       var request =
@@ -53,7 +53,7 @@ class Graph {
   }
 
   /// Returns the vertex collection
-  Future<Map<String, dynamic>?> vertexCollection(
+  FutureOr<Map<String, dynamic>?> vertexCollection(
       {Map<String, dynamic>? prop}) async {
     Map<String, dynamic>? res;
     try {
@@ -74,7 +74,7 @@ class Graph {
   }
 
   /// Drop vertex of a collection
-  Future<Map<String, dynamic>?> dropVertexCollection(String collection) async {
+  FutureOr<Map<String, dynamic>?> dropVertexCollection(String collection) async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest(
@@ -88,7 +88,7 @@ class Graph {
   }
 
   /// Returns edge definition
-  Future<Map<String, dynamic>?> edgeDefinition(
+  FutureOr<Map<String, dynamic>?> edgeDefinition(
       {Map<String, dynamic>? prop}) async {
     Map<String, dynamic>? res;
     try {
@@ -109,7 +109,7 @@ class Graph {
   }
 
   /// Replaces edge definition
-  Future<Map<String, dynamic>?> replaceEdgeDefinition(
+  FutureOr<Map<String, dynamic>?> replaceEdgeDefinition(
       String definition, Map<String, dynamic> data) async {
     Map<String, dynamic>? res;
     try {
@@ -125,7 +125,7 @@ class Graph {
   }
 
   /// Removes edge definition
-  Future<Map<String, dynamic>?> removeEdgeDefinition(String definition) async {
+  FutureOr<Map<String, dynamic>?> removeEdgeDefinition(String definition) async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest(
@@ -141,7 +141,7 @@ class Graph {
   //------------------------------CRUD VERTEX----------------------------------------------------------------------
 
   /// Creates a vertex
-  Future<Map<String, dynamic>?> createVertex(
+  FutureOr<Map<String, dynamic>?> createVertex(
       String collection, Map<String, dynamic> data) async {
     Map<String, dynamic>? res;
     try {
@@ -157,7 +157,7 @@ class Graph {
   }
 
   /// Get a vertex
-  Future<Map<String, dynamic>?> getVertex(
+  FutureOr<Map<String, dynamic>?> getVertex(
       String collection, String vertex) async {
     Map<String, dynamic>? res;
     try {
@@ -172,7 +172,7 @@ class Graph {
   }
 
   /// Updates a vertex
-  Future<Map<String, dynamic>?> updateVertex(
+  FutureOr<Map<String, dynamic>?> updateVertex(
       String collection, String vertex, Map<String, dynamic> data) async {
     Map<String, dynamic>? res;
     try {
@@ -188,7 +188,7 @@ class Graph {
   }
 
   /// Removes a vertex
-  Future<Map<String, dynamic>?> removeVertex(
+  FutureOr<Map<String, dynamic>?> removeVertex(
       String collection, String vertex) async {
     Map<String, dynamic>? res;
     try {
@@ -205,7 +205,7 @@ class Graph {
   //------------------------------CRUD EDGE------------------------------------------------------------------------
 
   /// Creates an edge
-  Future<Map<String, dynamic>?> createEdge(
+  FutureOr<Map<String, dynamic>?> createEdge(
       String collection, Map<String, dynamic> data) async {
     Map<String, dynamic>? res;
     try {
@@ -221,7 +221,7 @@ class Graph {
   }
 
   /// Get an edge
-  Future<Map<String, dynamic>?> getEdge(String collection, String edge) async {
+  FutureOr<Map<String, dynamic>?> getEdge(String collection, String edge) async {
     Map<String, dynamic>? res;
     try {
       var request = client.prepareRequest(
@@ -235,7 +235,7 @@ class Graph {
   }
 
   /// Updates an edge
-  Future<Map<String, dynamic>?> updateEdge(
+  FutureOr<Map<String, dynamic>?> updateEdge(
       String collection, String edge, Map<String, dynamic> data) async {
     Map<String, dynamic>? res;
     try {
@@ -251,7 +251,7 @@ class Graph {
   }
 
   /// Removes an edge
-  Future<Map<String, dynamic>?> removeEdge(
+  FutureOr<Map<String, dynamic>?> removeEdge(
       String collection, String edge) async {
     Map<String, dynamic>? res;
     try {
